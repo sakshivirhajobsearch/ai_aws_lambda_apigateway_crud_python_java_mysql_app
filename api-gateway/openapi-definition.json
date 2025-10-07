@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AI + AWS Lambda CRUD API",
+    "description": "Flask backend for managing AWS Lambda functions with AI-based analysis",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local Flask server"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root route",
+        "description": "Returns a simple message confirming the backend is running",
+        "responses": {
+          "200": {
+            "description": "Backend running",
+            "content": {
+              "text/plain": {
+                "example": "✅ AI + AWS Lambda + API Gateway Flask Backend is Running"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lambda/functions": {
+      "get": {
+        "summary": "List Lambda functions",
+        "description": "Returns a JSON list of all Lambda functions",
+        "responses": {
+          "200": {
+            "description": "List of Lambda functions",
+            "content": {
+              "application/json": {
+                "example": [
+                  {"FunctionName": "process_logs", "Runtime": "python3.9", "Description": "Process log files"},
+                  {"FunctionName": "email_notifier", "Runtime": "python3.9", "Description": "Send emails"}
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lambda/create": {
+      "post": {
+        "summary": "Create a Lambda function",
+        "description": "Creates a new Lambda function (mocked) and analyzes description using AI",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "FunctionName": {"type": "string"},
+                  "Description": {"type": "string"}
+                },
+                "required": ["FunctionName", "Description"]
+              },
+              "example": {
+                "FunctionName": "email_notifier",
+                "Description": "Send alert emails to users"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Lambda function created",
+            "content": {
+              "application/json": {
+                "example": {
+                  "status": "created",
+                  "function": {
+                    "FunctionName": "email_notifier",
+                    "Description": "Send alert emails to users",
+                    "Category": "Notification"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lambda/delete/{name}": {
+      "delete": {
+        "summary": "Delete a Lambda function",
+        "description": "Deletes a Lambda function by its name (mocked)",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Name of the Lambda function to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lambda function deleted",
+            "content": {
+              "application/json": {
+                "example": {"status": "deleted", "function": "email_notifier"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/ai/analyze": {
+      "post": {
+        "summary": "AI analyze text",
+        "description": "Classifies a text using AI logic",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {"text": {"type": "string"}},
+                "required": ["text"]
+              },
+              "example": {"text": "Validate user authentication tokens securely"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "AI categorization result",
+            "content": {
+              "application/json": {
+                "example": {
+                  "text": "Validate user authentication tokens securely",
+                  "category": "Security"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
